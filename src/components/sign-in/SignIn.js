@@ -7,8 +7,10 @@ import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
+import CircularProgress from "@material-ui/core/CircularProgress";
+
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 import { userLoginTypes } from "../../redux/user/user.types";
@@ -23,14 +25,24 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       marginTop: theme.spacing(3)
     }
+  },
+  submitButton: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loading: {
+    height: "30px !important",
+    width: "30px !important"
   }
 }));
 
 export default function LoginForm(props) {
   const history = useHistory();
+  const { loading } = useSelector(state => state.userData)
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
   const onSubmit = (data) => {
     dispatch({ type: userLoginTypes.USER_LOGIN_START, payload: data, history });
   };
@@ -72,7 +84,7 @@ export default function LoginForm(props) {
                 <Grid item xs={12}>
                   <TextField
                     variant="outlined"
-                    required
+                    error={!!errors.identifier}
                     fullWidth
                     {...register("identifier", { required: true })}
                     label="Email address"
@@ -82,7 +94,7 @@ export default function LoginForm(props) {
                 <Grid item xs={12}>
                   <TextField
                     variant="outlined"
-                    required
+                    error={!!errors.password}
                     fullWidth
                     {...register("password", { required: true })}
                     label="Password"
@@ -91,15 +103,16 @@ export default function LoginForm(props) {
                   />
                 </Grid>
               </Grid>
-              <Box my={2}>
-                <Button
+              <Box my={2} className={classes.submitButton}>
+                {loading ? <CircularProgress className={classes.loading} /> : <Button
                   type="submit"
                   fullWidth
                   variant="contained"
                   color="primary"
                 >
                   {content["02_primary-action"]}
-                </Button>
+                </Button>}
+
               </Box>
               <Grid container spacing={2} className={classes.actions}>
                 <Grid item xs={12} sm={6}>

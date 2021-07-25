@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
@@ -8,8 +9,8 @@ import Link from "@material-ui/core/Link";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { userRegisterTypes } from "../../redux/user/user.types";
 
@@ -23,14 +24,24 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       marginTop: theme.spacing(3)
     }
+  },
+  submitButton: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loading: {
+    height: "30px !important",
+    width: "30px !important"
   }
 }));
 
 export default function RegisterForm(props) {
   const history = useHistory();
   const classes = useStyles();
+  const { loading } = useSelector(state => state.userData)
   const dispatch = useDispatch();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
   const onSubmit = (data) => {
     dispatch({
       type: userRegisterTypes.USER_REGISTER_START,
@@ -42,7 +53,7 @@ export default function RegisterForm(props) {
   const content = {
     brand: { image: "mui-assets/img/logo-pied-piper-icon.png", width: 40 },
     "02_header": "Sign in",
-    "02_primary-action": "Sign in",
+    "02_primary-action": "Sign up",
     "02_secondary-action": "Don't have an account?",
     "02_tertiary-action": "Forgot password?",
     ...props.content
@@ -76,6 +87,7 @@ export default function RegisterForm(props) {
                 <Grid item xs={12}>
                   <TextField
                     variant="outlined"
+                    error={!!errors.username}
                     fullWidth
                     {...register("username", { required: true })}
                     label="Username"
@@ -86,7 +98,7 @@ export default function RegisterForm(props) {
                 <Grid item xs={12}>
                   <TextField
                     variant="outlined"
-                    required
+                    error={!!errors.email}
                     fullWidth
                     {...register("email", { required: true })}
                     label="Email address"
@@ -96,7 +108,7 @@ export default function RegisterForm(props) {
                 <Grid item xs={12}>
                   <TextField
                     variant="outlined"
-                    required
+                    error={!!errors.password}
                     fullWidth
                     {...register("password", { required: true })}
                     label="Password"
@@ -104,15 +116,18 @@ export default function RegisterForm(props) {
                   />
                 </Grid>
               </Grid>
-              <Box my={2}>
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                >
-                  {content["02_primary-action"]}
-                </Button>
+              <Box my={2} className={classes.submitButton}>
+                {loading ? <CircularProgress className={classes.loading} /> :
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                  >
+                    {content["02_primary-action"]}
+                  </Button>}
+
+
               </Box>
               <Grid container spacing={2} className={classes.actions}>
                 <Grid item xs={12} sm={6}>

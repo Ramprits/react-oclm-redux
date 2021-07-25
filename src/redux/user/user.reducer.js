@@ -1,4 +1,4 @@
-import { userLoginTypes } from "./user.types";
+import { userLoginTypes, userRegisterTypes } from "./user.types";
 
 const initialState = {
   currentUser: null,
@@ -32,6 +32,22 @@ export const userReducer = (state = initialState, { type, payload }) => {
         errorMessage: null,
         currentUser: null
       });
+
+    case userRegisterTypes.USER_REGISTER_START:
+      return Object.assign({}, state, {
+        loading: true,
+        errorMessage: null,
+        currentUser: null
+      });
+
+    case userRegisterTypes.USER_REGISTER_SUCCESS:
+      return Object.assign({}, state, {
+        loading: false,
+        errorMessage: null,
+        currentUser: payload
+      });
+
+
 
     default:
       return state;

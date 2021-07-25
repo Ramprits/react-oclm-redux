@@ -1,11 +1,11 @@
 import React from "react";
+import { Link as CustomLink } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Link from "@material-ui/core/Link";
-import Avatar from "@material-ui/core/Avatar";
 
 import Drawer from "@material-ui/core/Drawer";
 import List from "@material-ui/core/List";
@@ -20,6 +20,10 @@ import AppsIcon from "@material-ui/icons/Apps";
 import BusinessCenterIcon from "@material-ui/icons/BusinessCenter";
 import LiveHelpIcon from "@material-ui/icons/LiveHelp";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
+import ProfileMenu from "../profile-menu/Profile";
+import Button from "@material-ui/core/Button";
+import { useSelector } from "react-redux";
+import { Fragment } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,6 +71,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Navigation(props) {
   const classes = useStyles();
+  const { currentUser } = useSelector(state => state.userData)
 
   const content = {
     brand: { image: "mui-assets/img/logo-pied-piper-white.png", width: 120 },
@@ -156,9 +161,18 @@ export default function Navigation(props) {
           <IconButton color="inherit">
             <NotificationsIcon />
           </IconButton>
-          <IconButton color="inherit">
-            <Avatar alt="" src={content["avatar"]} />
-          </IconButton>
+
+          {currentUser ? (<ProfileMenu />) : (
+            <Fragment>
+              <IconButton color="inherit" >
+                <Button color="inherit" component={CustomLink} to="/login" className={classes.secondaryButton}>Sign in</Button>
+              </IconButton>
+              <IconButton color="inherit" >
+                <Button variant="contained" component={CustomLink} to="/register" color="secondary">Sign up</Button>
+              </IconButton>
+
+            </Fragment>
+          )}
         </Toolbar>
       </AppBar>
       <Drawer className={classes.drawer} variant="permanent">
