@@ -1,0 +1,5 @@
+export const orderTypes = {
+    ORDER_START: 'ORDER_START',
+    ORDER_SUCCESS: 'ORDER_SUCCESS',
+    ORDER_FAILURE: 'ORDER_FAILURE',
+}

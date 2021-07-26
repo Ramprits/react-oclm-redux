@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link as CustomLink } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
@@ -54,8 +54,7 @@ export default function RegisterForm(props) {
     brand: { image: "mui-assets/img/logo-pied-piper-icon.png", width: 40 },
     "02_header": "Sign in",
     "02_primary-action": "Sign up",
-    "02_secondary-action": "Don't have an account?",
-    "02_tertiary-action": "Forgot password?",
+    "02_secondary-action": "Do you have an account?",
     ...props.content
   };
 
@@ -131,9 +130,9 @@ export default function RegisterForm(props) {
               </Box>
               <Grid container spacing={2} className={classes.actions}>
                 <Grid item xs={12} sm={6}>
-                  <Link href="#" variant="body2">
+                  <CustomLink to="/login" variant="body2">
                     {content["02_secondary-action"]}
-                  </Link>
+                  </CustomLink>
                 </Grid>
                 <Grid item xs={12} sm={6} className={classes.tertiaryAction}>
                   <Link href="#" variant="body2">
